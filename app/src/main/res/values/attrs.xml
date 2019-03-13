@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<declare-styleable name="CustomTitleView">-->
+        <!--<attr name="titleText" format="string" />-->
+        <!--<attr name="titleTextColor" format="color" />-->
+        <!--<attr name="titleTextSize" format="dimension" />-->
+    <!--</declare-styleable>-->
+
+    <declare-styleable name="RouteProgress">
+        <!--进度条的高与长(不含箭头)-->
+        <attr name="ProgressHeight" format="dimension" />
+        <attr name="ProgressWidth" format="dimension" />
+        <!--// 箭头的高与长-->
+        <!--// 最高的那一边-->
+        <attr name="ArrowsHeight" format="dimension" />
+        <attr name="ArrowsWidth" format="dimension" />
+        <!--圆片的半径-->
+        <attr name="radius" format="dimension" />
+        <!--RichLength-->
+        <attr name="RichLength" format="dimension" />
+        <!--进度条和文字的偏移高度-->
+        <attr name="offsetHeight" format="dimension"/>
+        <!--字体大小-->
+        <attr name="TextSize" format="dimension" />
+        <!--是否粗体-->
+        <attr name="TextBold" format="boolean" />
+        <!--走过的路径的颜色-->
+        <attr name="PassByColor" format="color" />
+        <!--未走过路径的颜色-->
+        <attr name="NonPassByColor" format="color" />
+        <!--走过的文字的颜色-->
+        <attr name="PassByTextColor" format="color" />
+        <!--未走过文字的颜色-->
+        <attr name="NonPassByTextColor" format="color" />
+
+    </declare-styleable>
+
+</resources>

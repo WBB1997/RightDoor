@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<routes>
+    <route name="route_1">
+        <item>
+            <chn>一号设计大楼(旋转门)</chn>
+            <eng>Design building 1(Revolving Door)</eng>
+        </item>
+        <item>
+            <chn>二号设计大楼</chn>
+            <eng>Design building 2</eng>
+        </item>
+        <item>
+            <chn>试制部大楼</chn>
+            <eng>Prototyping Building</eng>
+        </item>
+        <item>
+            <chn>竞品楼</chn>
+            <eng>Competitive Product Building</eng>
+        </item>
+        <item>
+            <chn>五号门</chn>
+            <eng>Gate 5</eng>
+        </item>
+    </route>
+    <route name="route_2">
+        <item>
+            <chn>五号门</chn>
+            <eng>Gate 5</eng>
+        </item>
+        <item>
+            <chn>发动机大楼</chn>
+            <eng>Engine Building</eng>
+        </item>
+        <item>
+            <chn>竞品大楼</chn>
+            <eng>Competitive Product Building</eng>
+        </item>
+        <item>
+            <chn>一号食堂</chn>
+            <eng>No.1 Canteen</eng>
+        </item>
+        <item>
+            <chn>造型楼</chn>
+            <eng>Styling Building</eng>
+        </item>
+        <item>
+            <chn>一号设计大楼</chn>
+            <eng>Design building 1</eng>
+        </item>
+        <item>
+            <chn>一号设计大楼(旋转门)</chn>
+            <eng>Design building 1(Revolving Door)</eng>
+        </item>
+    </route>
+</routes>

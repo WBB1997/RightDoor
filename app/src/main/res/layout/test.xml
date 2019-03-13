@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/colorPrimaryDark">
+
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/pre_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="101dp"
+        android:layout_marginTop="73dp"
+        android:gravity="center"
+        android:text="上一站"
+        android:textColor="#9cf8fa"
+        android:textSize="40px"
+        android:textStyle="bold"
+        android:background="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/left_chn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="五号门"
+        android:textColor="#9cf8fa"
+        android:textSize="70px"
+        android:textStyle="bold"
+        android:background="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/left_eng"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Gate 5"
+        android:textColor="#9cf8fa"
+        android:textSize="50px"
+        android:textStyle="normal"/>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_weight="0"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark">
+    <TextView
+        android:id="@+id/current_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="94dp"
+        android:layout_marginTop="60dp"
+        android:text="本站停靠"
+        android:textSize="50px"
+        android:textColor="#fff701"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/mid_chn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="发动机大楼"
+        android:textSize="90px"
+        android:textColor="#fff701"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/mid_eng"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Engine Building"
+        android:textSize="90px"
+        android:textColor="#fff701"
+        android:textStyle="bold"/>
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark">
+    <TextView
+        android:id="@+id/next_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="101dp"
+        android:layout_marginTop="73dp"
+        android:text="下一站"
+        android:textSize="40px"
+        android:textColor="#9cf8fa"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/right_chn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="竞品大楼"
+        android:textSize="70px"
+        android:textColor="#9cf8fa"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/right_eng"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Competitive Building"
+        android:textSize="50px"
+        android:textColor="#9cf8fa"
+        android:textStyle="normal"/>
+</LinearLayout>
+</LinearLayout>
