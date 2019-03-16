@@ -1,64 +1,75 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/text"
+    android:layout_height="match_parent">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:paddingTop="10dp"
-        android:paddingLeft="67dp"
-        android:paddingRight="67dp"
-        android:paddingBottom="10dp"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/firstStation"
-            android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/path_framelayout">
+        <ImageView
+            android:id="@+id/path_image_back"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:textSize="40px"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/lastStation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:textSize="40px"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
-    </LinearLayout>
-    <LinearLayout
+            android:background="@color/colorPrimaryDark"/>
+        <AbsoluteLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+            <TextView
+                android:layout_width="500px"
+                android:layout_height="80px"
+                android:id="@+id/text1"
+                android:textColor="@color/textColor"
+                android:gravity="left"
+                android:layout_x="170px"
+                android:layout_y="65px"
+                android:textSize="65px"/>
+            <TextView
+                android:layout_width="540px"
+                android:layout_height="75px"
+                android:id="@+id/text2"
+                android:textColor="@color/textColor"
+                android:gravity="center"
+                android:layout_x="520px"
+                android:layout_y="220px"
+                android:textSize="65px"/>
+            <TextView
+                android:layout_width="650px"
+                android:layout_height="80px"
+                android:id="@+id/text3"
+                android:gravity="center"
+                android:textColor="@color/textColor"
+                android:layout_x="1060px"
+                android:layout_y="65px"
+                android:textSize="65px"/>
+        </AbsoluteLayout>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/textFrame"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingLeft="67dp"
-        android:paddingRight="67dp"
-        android:layout_weight="1"
-        android:background="@color/colorPrimaryDark">
-        <com.wubeibei.rightdoor.view.RouteProgress
-            android:id="@+id/progress"
+        android:layout_height="match_parent"
+        android:background="@color/red"
+        android:animateLayoutChanges="true"
+        >
+        <LinearLayout
+            android:layout_marginTop="40px"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@color/colorPrimaryDark"
-            />
-    </LinearLayout>
-    <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="上一站"-->
-            <!--android:id="@+id/pre"/>-->
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="下一站"-->
-            <!--android:id="@+id/next"/>-->
-    <!--</LinearLayout>-->
-</LinearLayout>
+            android:id="@+id/path_text"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="东风汽车公司技术中心"
+                android:layout_gravity="center"
+                android:textSize="150px"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DONGFENG MOTOR CORPORATION TECHNICAL CENTER"
+                android:layout_gravity="center"
+                android:textSize="60px"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

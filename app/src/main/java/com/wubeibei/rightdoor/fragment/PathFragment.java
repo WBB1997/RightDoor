@@ -1,29 +1,42 @@
 package com.wubeibei.rightdoor.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.wubeibei.rightdoor.R;
-import com.wubeibei.rightdoor.view.RouteProgress;
+import com.wubeibei.rightdoor.util.LogUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+
 public class PathFragment extends Fragment {
     private static final String TAG = "PathFragment";
-    RouteProgress routeProgress;
-    TextView firstStation;
-    TextView lastStation;
-    LinearLayout linearLayout;
+    private TextView textView;
+    private LinearLayout linearLayout;
+    private FrameLayout textFrame;
+    private FrameLayout pathFrame;
+    private ArrayList<TextView> textViews = new ArrayList<>(3);
+    private View main;
+    private AnimatorSet animatorSet = new AnimatorSet();
+
 
     public PathFragment() {
     }
@@ -43,90 +56,116 @@ public class PathFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_path, container, false);
-        routeProgress = view.findViewById(R.id.progress);
-        firstStation = view.findViewById(R.id.firstStation);
-        lastStation = view.findViewById(R.id.lastStation);
-        linearLayout = view.findViewById(R.id.text);
-        routeProgress.setActivity(getActivity());
+        main = inflater.inflate(R.layout.fragment_path, container, false);
+        textFrame = main.findViewById(R.id.textFrame);
+        linearLayout = main.findViewById(R.id.path_text);
+        pathFrame = main.findViewById(R.id.path_framelayout);
+        textViews.add((TextView) main.findViewById(R.id.text1));
+        textViews.add((TextView) main.findViewById(R.id.text2));
+        textViews.add((TextView) main.findViewById(R.id.text3));
+        setImge(R.drawable.r4);
         Bundle bundle = getArguments();
         if (bundle != null) {
             try {
                 ArrayList<String> chn = (ArrayList<String>) bundle.getSerializable("routeChnName");
-                routeProgress.setRouteChnName(chn);
-                assert chn != null;
-                firstStation.setText(chn.get(0));
-                lastStation.setText(chn.get(chn.size() - 1));
+                LogUtil.d(TAG, chn.toString());
+                for (int i = 4; i < chn.size() && i <= 6; i++)
+                    textViews.get(i - 4).setText(chn.get(i));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-//        Button pre = view.findViewById(R.id.pre);
-//        Button next = view.findViewById(R.id.next);
-//        pre.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setNowStation(getNowStation() - 1);
-//            }
-//        });
-//        next.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setNowStation(getNowStation() + 1);
-//            }
-//        });
-        return view;
+        return main;
     }
 
-    public void onFragmentInteraction(final ArrayList<String> routeChnName) {
-        routeProgress.setRouteChnName(routeChnName);
-
+    public void setRouteChnName(final ArrayList<String> routeChnName) {
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                firstStation.setText(routeChnName.get(0));
-                lastStation.setText(routeChnName.get(routeChnName.size() - 1));
+                for(int i = 0; i < 3; i++)
+                    textViews.get(i).setText("");
+                for (int i = 4; i < routeChnName.size(); i++)
+                    textViews.get(i - 4).setText(routeChnName.get(i));
             }
         });
-    }
-
-    public void setPassByProgressBetweenTwoSites(float passByProgressBetweenTwoSites) {
-        routeProgress.setPassByProgressBetweenTwoSites(passByProgressBetweenTwoSites);
-    }
-
-    public void setNowStation(int nowStation) {
-        routeProgress.setNowStation(nowStation);
-    }
-
-    public int getNowStation() {
-        return routeProgress.getNowStation();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            routeProgress.setAnimation(null);
-            linearLayout.setAnimation(null);
+            pathFrame.setAlpha(0);
+            setImge(R.drawable.r4);
+            animatorSet = new AnimatorSet();
+            ObjectAnimator TextalphaAnimatorIn = ObjectAnimator.ofFloat(textFrame, "alpha", 0.0f, 1f);
+            TextalphaAnimatorIn.setDuration(1);
+            ObjectAnimator textViewAlpha = ObjectAnimator.ofFloat(linearLayout, "alpha", 0.0f, 1f);
+            textViewAlpha.setDuration(2000);
+            ObjectAnimator TextalphaAnimatorOut = ObjectAnimator.ofFloat(textFrame, "alpha", 1f, 0.0f);
+            TextalphaAnimatorIn.setDuration(500);
+            ObjectAnimator PathalphaAnimatorIn = ObjectAnimator.ofFloat(pathFrame, "alpha", 0.0f, 1f);
+            PathalphaAnimatorIn.setDuration(1000);
+            ObjectAnimator PathalphaAnimatorOut = ObjectAnimator.ofFloat(pathFrame, "alpha", 1f, 0f);
+            animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+            animatorSet.play(TextalphaAnimatorIn).with(textViewAlpha);
+            animatorSet.play(TextalphaAnimatorOut).after(10000);
+            animatorSet.play(PathalphaAnimatorIn).after(TextalphaAnimatorOut);
+            if(textView != null) {
+                ObjectAnimator PathTextalphaAnimator = ObjectAnimator.ofFloat(textView, "alpha", 0.0f, 1f);
+//                ObjectAnimator scaleYAnimation = ObjectAnimator.ofFloat(textView, "scaleY", 1f, 1.3f);
+//                ObjectAnimator scaleXAnimation = ObjectAnimator.ofFloat(textView, "scaleX", 1f, 1.3f);
+//                scaleYAnimation.setRepeatMode(ObjectAnimator.REVERSE);
+//                scaleYAnimation.setDuration(1000);
+//                scaleYAnimation.setRepeatCount(7);
+//                scaleXAnimation.setRepeatMode(ObjectAnimator.REVERSE);
+//                scaleXAnimation.setDuration(1000);
+//                scaleXAnimation.setRepeatCount(7);
+                PathTextalphaAnimator.setDuration(1000);
+                PathTextalphaAnimator.setRepeatCount(6);
+                PathTextalphaAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+                animatorSet.play(PathalphaAnimatorIn).with(PathTextalphaAnimator);
+            }
+            animatorSet.play(PathalphaAnimatorOut).after(25000);
+            animatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    LogUtil.d(TAG, "重新开始");
+                    animatorSet.start();
+                }
+            });
+            animatorSet.start();
+        } else {
+            animatorSet.removeAllListeners();
+            animatorSet.end();
+            animatorSet = null;
         }
     }
 
-    /**
-     * 动画
-     * @param listener
-     */
-    public void startHiddenAnimation(Animation.AnimationListener listener) {
-        if (getContext() == null || getActivity() == null)
-            return;
-        final Animation progress = AnimationUtils.loadAnimation(this.getContext(), R.anim.out_top_to_bottom);
-        final Animation text = AnimationUtils.loadAnimation(this.getContext(), R.anim.text_alpha);
-        progress.setAnimationListener(listener);
-        Objects.requireNonNull(this.getActivity()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                routeProgress.startAnimation(progress);
-                linearLayout.startAnimation(text);
-            }
-        });
+    public void setNowStation(final int station){
+        if(4 <= station && station < 7) {
+            textView = textViews.get(station - 4);
+            Objects.requireNonNull(this.getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i = 0; i < textViews.size(); i++)
+                        textViews.get(i).setTextColor(main.getResources().getColor(R.color.textColor));
+                    textView.setTextColor(main.getResources().getColor(R.color.textHighLightColor));
+                }
+            });
+        }else{
+            Objects.requireNonNull(this.getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i = 0; i < textViews.size(); i++)
+                        textViews.get(i).setTextColor(main.getResources().getColor(R.color.textColor));
+                }
+            });
+            textView = null;
+        }
+    }
+
+    public void setImge(int res){
+        ImageView imageView = main.findViewById(R.id.path_image_back);
+        Glide.with(PathFragment.this).load(res).into(imageView);
     }
 }

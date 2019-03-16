@@ -6,7 +6,7 @@ package com.wubeibei.rightdoor.res;
 public class RightDoorCommand {
     //左车门
     public static final int CurrentDrivingRoadIDNum = 63; //当前行驶线路ID
-    public static final int Left_Work_Sts = 43; //左车门状态命令
+    public static final int Right_Work_Sts = 47; //左车门状态命令
     public static final int openingDoor = 1; //正在开门
     public static final int openedDoor = 3; //开门完毕
     public static final int closingDoor = 4; //正在关门

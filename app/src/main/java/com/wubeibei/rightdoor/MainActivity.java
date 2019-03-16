@@ -1,6 +1,5 @@
 package com.wubeibei.rightdoor;
 
-import android.animation.ValueAnimator;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.Animation;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wubeibei.rightdoor.fragment.ADFragment;
@@ -35,29 +33,44 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import static com.wubeibei.rightdoor.res.RightDoorCommand.Left_Work_Sts;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private int CurrentDrivingRoadIDNum = 0; //当前行驶路线
-    private int NextStationIDNumb = 1; //下一站点 ID
-    private int NowStation = 0; // 当前站点
+    private int NextStationIDNumb = 0; //下一站点 ID
     private final static int MESSAGELENGTH = 1024;  //数据长度
     private ArrayList<ArrayList<Pair<String, String>>> RouteArrayList = new ArrayList<>();
     private FragmentManager fragmentManager;
     private PathFragment pathFragment;
     private ADFragment adFragment;
     private StationFragment stationFragment;
-    private double DistanceForNextStation = 0;
-    private double TotalDistanceBetweenTheTwoStations;
     private final int receivePORT = 5556;  // 接收port号
+    private Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    replaceFragment(adFragment);
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adFragment.setImge(R.drawable.r1);
+                        }
+                    });
+                    Thread.sleep(3900);
+                    replaceFragment(pathFragment);
+                    Thread.sleep(18000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // 初始化路线
         initRouteArrayList();
         // 去掉虚拟按键
@@ -69,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < RouteArrayList.get(CurrentDrivingRoadIDNum).size(); i++)
             chn.add(RouteArrayList.get(CurrentDrivingRoadIDNum).get(i).first);
         pathFragment = PathFragment.newInstance(chn);
-        adFragment = ADFragment.newInstance(R.drawable.left_welcome);
+        adFragment = ADFragment.newInstance(R.drawable.r1);
+        stationFragment = StationFragment.newInstance();
         // 初始化站点信息
-        setStationFragment();
         replaceFragment(pathFragment);
-//        replaceFragment(stationFragment);
-//        replaceFragment(adFragment);
-
+        replaceFragment(stationFragment);
+        replaceFragment(adFragment);
+        thread.start();
     }
 
     @Override
@@ -89,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+
+
     //接收数据
     private void receive() {
         try {
@@ -97,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
             datagramSocket.bind(new InetSocketAddress(receivePORT));
 
             DatagramPacket datagramPacket;
+//            replaceFragment(pathFragment);
             // 持续读取命令
             while (true) {
                 byte[] receMsgs = new byte[MESSAGELENGTH];
@@ -104,17 +120,17 @@ public class MainActivity extends AppCompatActivity {
                 // 读取到命令
                 try {
                     datagramSocket.receive(datagramPacket);
+                    if(thread.isAlive())
+                        thread.interrupt();
                     JSONObject jsonObject = JSONObject.parseObject(new String(receMsgs));
-                    LogUtil.d(TAG,jsonObject.toJSONString());
+                    LogUtil.d(TAG, jsonObject.toJSONString());
                     int id = jsonObject.getIntValue("id");
                     int data;
                     switch (id) {
-                        // 左车门状态（开车门或关车门）
-                        case RightDoorCommand.Left_Work_Sts: {
-                            // LogUtil.d("门控信号: ", Msg);
+                        // 右车门状态（开车门或关车门）
+                        case RightDoorCommand.Right_Work_Sts: {
                             data = jsonObject.getIntValue("data");
                             showDoorState(data);
-                            replaceFragment(adFragment);
                         }
                         break;
                         // 当前行驶线路ID
@@ -128,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
                                 ArrayList<String> chn = new ArrayList<>();
                                 for (int i = 0; i < RouteArrayList.get(CurrentDrivingRoadIDNum).size(); i++)
                                     chn.add(RouteArrayList.get(CurrentDrivingRoadIDNum).get(i).first);
-                                pathFragment.onFragmentInteraction(chn);
+                                pathFragment.setRouteChnName(chn);
+                                pathFragment.setNowStation(0);
                             }
-                            replaceFragment(pathFragment); // 只要发送路线ID，就显示路线图
                         }
                         break;
                         // 下一个站点ID
@@ -146,99 +162,22 @@ public class MainActivity extends AppCompatActivity {
                             data = jsonObject.getIntValue("data");
                             switch (data) {
                                 //到站提醒
-                                case RightDoorCommand.arrtiving: {
-                                    if (!pathFragment.isHidden()) {
-                                        pathFragment.startHiddenAnimation(new Animation.AnimationListener() {
-                                            @Override
-                                            public void onAnimationStart(Animation animation) {
-                                            }
-
-                                            @Override
-                                            public void onAnimationEnd(Animation animation) {
-                                                setStationFragment();
-                                                replaceFragment(stationFragment);
-                                            }
-
-                                            @Override
-                                            public void onAnimationRepeat(Animation animation) {
-                                            }
-                                        });
-                                    } else {
-                                        setStationFragment();
-                                        replaceFragment(stationFragment);
-                                    }
-                                }
+                                case RightDoorCommand.arrtiving:
+                                    replaceFragment(stationFragment);
                                 break;
-                                case RightDoorCommand.arrtived: {
-                                    if (NowStation != NextStationIDNumb) {
-                                        if (NextStationIDNumb > NowStation) {
-                                            final ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-                                            animator.setDuration(1000);
-                                            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                                @Override
-                                                public void onAnimationUpdate(ValueAnimator animation) {
-                                                    Float value = (Float) animation.getAnimatedValue();
-                                                    pathFragment.setPassByProgressBetweenTwoSites(value);
-                                                    if (value == 1.0f) {
-                                                        NowStation = NextStationIDNumb;
-                                                        pathFragment.setPassByProgressBetweenTwoSites(0f);
-                                                        pathFragment.setNowStation(NowStation);
-                                                    }
-                                                }
-                                            });
-                                            this.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    animator.start();
-                                                }
-                                            });
-                                        } else {
-                                            NowStation = NextStationIDNumb;
-                                            pathFragment.setNowStation(NowStation);
-                                            final ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
-                                            animator.setDuration(1000);
-                                            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                                @Override
-                                                public void onAnimationUpdate(ValueAnimator animation) {
-                                                    Float value = (Float) animation.getAnimatedValue();
-                                                    pathFragment.setPassByProgressBetweenTwoSites(value);
-                                                    if (value == 0.0f) {
-                                                        pathFragment.setPassByProgressBetweenTwoSites(0f);
-                                                    }
-                                                }
-
-                                            });
-                                            this.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    animator.start();
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-                                break;
+                                case RightDoorCommand.arrtived:
+                                    pathFragment.setNowStation(NextStationIDNumb);
+                                    break;
                                 case RightDoorCommand.start:
+                                    replaceFragment(pathFragment);
                                     break;
                                 default:
                                     break;
                             }
-                            replaceFragment(pathFragment);
                         }
                         break;
-
-//                    break;
-                        // 距离下一个站点的距离
-//                        case RightDoorCommand.DistanceForNextStation:
-//                            data = jsonObject.getIntValue("data");
-//                            if (DistanceForNextStation < 0.2 && data > DistanceForNextStation)
-////                            if (DistanceForNextStation <= 1.0 )
-//                                TotalDistanceBetweenTheTwoStations = data;
-//                            DistanceForNextStation = data;
-//                            pathFragment.setPassByProgressBetweenTwoSites((float) (DistanceForNextStation / TotalDistanceBetweenTheTwoStations));
-//                            break;
-                    default:
-                        break;
+                        default:
+                            break;
                     }
 
                 } catch (IOException e) {
@@ -252,20 +191,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    // 设置站点显示状态
-    private void setStationFragment() {
-        int size = RouteArrayList.get(CurrentDrivingRoadIDNum).size();
-        if (NextStationIDNumb == 1)
-            stationFragment = StationFragment.newInstance(null, RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb), RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb + 1));
-        else if (NextStationIDNumb == size - 1)
-            stationFragment = StationFragment.newInstance(RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb - 1), RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb), null);
-        else if (NextStationIDNumb == 0)
-            stationFragment = StationFragment.newInstance(RouteArrayList.get(CurrentDrivingRoadIDNum).get(size - 1), RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb), RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb + 1));
-        else
-            stationFragment = StationFragment.newInstance(RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb - 1), RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb), RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb + 1));
-    }
-
     // 显示门的状态
     private void showDoorState(final int DoorState) {
         new Thread() {
@@ -275,18 +200,19 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         //更新UI
                         switch (DoorState) {
-
                             case RightDoorCommand.openingDoor:
-                                adFragment.setImge(R.drawable.open);
+                                adFragment.setImge(R.drawable.opendoor_right);
+                                replaceFragment(adFragment);
                                 break;
                             case RightDoorCommand.openedDoor:
-                                replaceFragment(pathFragment);
+                                replaceFragment(stationFragment);
                                 break;
                             case RightDoorCommand.closingDoor:
-                                adFragment.setImge(R.drawable.close);
+                                adFragment.setImge(R.drawable.closedoor_right);
+                                replaceFragment(adFragment);
                                 break;
                             case RightDoorCommand.closedDoor:
-                                replaceFragment(pathFragment);
+                                replaceFragment(stationFragment);
                                 break;
                             default:
                                 break;
@@ -298,21 +224,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //替换fragment
-    public void replaceFragment(Fragment fragment) {
-        // 获得一个 FragmentTransaction 的实例
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    public void replaceFragment(final Fragment fragment) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // 获得一个 FragmentTransaction 的实例
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        // 先隐藏所有fragment
-        for (Fragment fragment1 : fragmentManager.getFragments())
-            fragmentTransaction.hide(fragment1);
+                // 先隐藏所有fragment
+                for (Fragment fragment1 : fragmentManager.getFragments())
+                    fragmentTransaction.hide(fragment1);
 
-        // 再显示fragment
-        if (fragment.isAdded())
-            fragmentTransaction.show(fragment);
-        else
-            fragmentTransaction.add(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-//        fragmentTransaction.commit();
+                // 再显示fragment
+                if (fragment.isAdded())
+                    fragmentTransaction.show(fragment);
+                else
+                    fragmentTransaction.add(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+            }
+        });
     }
 
     // 初始化路线图

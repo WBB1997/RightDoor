@@ -1,114 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
-
+    android:background="@color/red">
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:background="@color/colorPrimaryDark"
-        android:layout_gravity="center">
-
+        android:orientation="vertical">
         <TextView
-            android:id="@+id/pre_stop"
+            android:id="@+id/text1"
+            android:layout_marginTop="20px"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="47dp"
-            android:layout_marginTop="73dp"
+            android:layout_height="match_parent"
+            android:text="SHARING VAN"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:textColor="#ffffff"
-            android:textSize="40px"
             android:textStyle="bold"
-            android:background="@color/colorPrimaryDark"/>
-
-        <TextView
-            android:id="@+id/left_chn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:textSize="70px"
-            android:textStyle="bold"
-            android:background="@color/colorPrimaryDark"/>
-
-        <TextView
-            android:id="@+id/left_eng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#ffffff"
-            android:textSize="50px"
-            android:textStyle="normal"/>
+            android:textSize="230px"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="40px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/No1Frame"
+        android:orientation="vertical">
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:orientation="vertical"
-        android:background="@color/colorPrimaryDark">
-        <TextView
-            android:id="@+id/current_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="60dp"
-            android:layout_marginBottom="40dp"
-            android:textSize="50px"
-            android:textColor="#999999"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/mid_chn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="90px"
-            android:textColor="#999999"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/mid_eng"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="50px"
-            android:textColor="#999999"
-            android:textStyle="bold"/>
+        android:layout_height="wrap_content"
+        android:text="东风汽车公司技术中心"
+        android:layout_gravity="center"
+        android:textSize="150px"
+        android:textStyle="bold"
+        android:id="@id/text2"
+        android:textColor="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DONGFENG MOTOR CORPORATION TECHNICAL CENTER"
+        android:layout_gravity="center"
+        android:textSize="60px"
+        android:id="@id/text3"
+        android:textColor="@android:color/white"/>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:background="@color/colorPrimaryDark">
-        <TextView
-            android:id="@+id/next_stop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="73dp"
-            android:layout_marginBottom="47dp"
-            android:textSize="40px"
-            android:textColor="#ffffff"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/right_chn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="70px"
-            android:textColor="#ffffff"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/right_eng"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="50px"
-            android:textColor="#ffffff"
-            android:textStyle="normal"/>
-    </LinearLayout>
-</LinearLayout>
+</FrameLayout>
