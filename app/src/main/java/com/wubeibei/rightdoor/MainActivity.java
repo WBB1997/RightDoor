@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wubeibei.rightdoor.fragment.ADFragment;
+import com.wubeibei.rightdoor.fragment.MotionlessFragment;
 import com.wubeibei.rightdoor.fragment.PathFragment;
 import com.wubeibei.rightdoor.fragment.StationFragment;
 import com.wubeibei.rightdoor.res.RightDoorCommand;
@@ -43,28 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private PathFragment pathFragment;
     private ADFragment adFragment;
     private StationFragment stationFragment;
+    MotionlessFragment motionlessFragment;
     private final int receivePORT = 5556;  // 接收port号
-    private Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                while (true) {
-                    replaceFragment(adFragment);
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adFragment.setImge(R.drawable.r1);
-                        }
-                    });
-                    Thread.sleep(3900);
-                    replaceFragment(pathFragment);
-                    Thread.sleep(18000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    });
 
 
     @Override
@@ -83,12 +64,13 @@ public class MainActivity extends AppCompatActivity {
             chn.add(RouteArrayList.get(CurrentDrivingRoadIDNum).get(i).first);
         pathFragment = PathFragment.newInstance(chn);
         adFragment = ADFragment.newInstance(R.drawable.r1);
-        stationFragment = StationFragment.newInstance();
+        motionlessFragment = MotionlessFragment.newInstance(R.drawable.r1);
         // 初始化站点信息
+        setStationFragment();
         replaceFragment(pathFragment);
         replaceFragment(stationFragment);
         replaceFragment(adFragment);
-        thread.start();
+        replaceFragment(motionlessFragment);
     }
 
     @Override
@@ -112,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             datagramSocket.bind(new InetSocketAddress(receivePORT));
 
             DatagramPacket datagramPacket;
-//            replaceFragment(pathFragment);
+            replaceFragment(motionlessFragment);
             // 持续读取命令
             while (true) {
                 byte[] receMsgs = new byte[MESSAGELENGTH];
@@ -120,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 // 读取到命令
                 try {
                     datagramSocket.receive(datagramPacket);
-                    if(thread.isAlive())
-                        thread.interrupt();
+
                     JSONObject jsonObject = JSONObject.parseObject(new String(receMsgs));
                     LogUtil.d(TAG, jsonObject.toJSONString());
                     int id = jsonObject.getIntValue("id");
@@ -163,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                             switch (data) {
                                 //到站提醒
                                 case RightDoorCommand.arrtiving:
+                                    setStationFragment();
                                     replaceFragment(stationFragment);
                                 break;
                                 case RightDoorCommand.arrtived:
@@ -243,6 +225,25 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    // 设置站点显示状态
+    private void setStationFragment() {
+        int size = RouteArrayList.get(CurrentDrivingRoadIDNum).size();
+        if(NextStationIDNumb < 0 || NextStationIDNumb >= size) {
+            return;
+        }
+        if(stationFragment != null) {
+            if (NextStationIDNumb == size - 1)
+                stationFragment.setStation(RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb).first, RouteArrayList.get(CurrentDrivingRoadIDNum).get(0).first);
+            else
+                stationFragment.setStation(RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb).first, RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb + 1).first);
+        }else{
+            if (NextStationIDNumb == size - 1)
+                stationFragment = StationFragment.newInstance(RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb).first, RouteArrayList.get(CurrentDrivingRoadIDNum).get(0).first);
+            else
+                stationFragment = StationFragment.newInstance(RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb).first, RouteArrayList.get(CurrentDrivingRoadIDNum).get(NextStationIDNumb + 1).first);
+        }
     }
 
     // 初始化路线图

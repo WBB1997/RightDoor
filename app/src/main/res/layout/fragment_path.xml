@@ -42,34 +42,22 @@
                 android:textSize="65px"/>
         </AbsoluteLayout>
     </FrameLayout>
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/textFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/red"
-        android:animateLayoutChanges="true"
-        >
-        <LinearLayout
-            android:layout_marginTop="40px"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="60px"
             android:id="@+id/path_text"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="东风汽车公司技术中心"
-                android:layout_gravity="center"
-                android:textSize="150px"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DONGFENG MOTOR CORPORATION TECHNICAL CENTER"
-                android:layout_gravity="center"
-                android:textSize="60px"
-                android:textColor="@android:color/white"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="欢迎乘坐 SHARING VAN"
+            android:textColor="@android:color/white"
+            android:textSize="160px"
+            android:textStyle="bold" />
+    </LinearLayout>
 </FrameLayout>

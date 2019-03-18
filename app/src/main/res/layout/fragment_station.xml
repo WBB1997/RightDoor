@@ -1,46 +1,62 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/red">
-    <LinearLayout
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/nextStation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/text1"
-            android:layout_marginTop="20px"
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@drawable/now7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="SHARING VAN"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="230px"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="4"/>
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:gravity="center"
+                android:textSize="100px"
+                android:textColor="@color/textHighLightColor"
+                android:id="@+id/nextStationText"
+                android:textStyle="bold"
+                android:singleLine="false"/>
+        </LinearLayout>
+    </FrameLayout>
 
-    <LinearLayout
-        android:layout_marginTop="40px"
+    <FrameLayout
+        android:id="@+id/nowStation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/No1Frame"
-        android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="东风汽车公司技术中心"
-        android:layout_gravity="center"
-        android:textSize="150px"
-        android:textStyle="bold"
-        android:id="@id/text2"
-        android:textColor="@android:color/white"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DONGFENG MOTOR CORPORATION TECHNICAL CENTER"
-        android:layout_gravity="center"
-        android:textSize="60px"
-        android:id="@id/text3"
-        android:textColor="@android:color/white"/>
-    </LinearLayout>
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@drawable/next7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:gravity="center"
+                android:textSize="100px"
+                android:textColor="@color/textHighLightColor"
+                android:id="@+id/nowStationText"
+                android:textStyle="bold"
+                android:singleLine="false"/>
+            <TextView
+                android:layout_width="0px"
+                android:textColor="@color/textHighLightColor"
+                android:layout_height="match_parent"
+                android:layout_weight="4"/>
+        </LinearLayout>
+    </FrameLayout>
 </FrameLayout>

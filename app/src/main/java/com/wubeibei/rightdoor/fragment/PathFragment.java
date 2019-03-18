@@ -20,18 +20,14 @@ import com.bumptech.glide.Glide;
 import com.wubeibei.rightdoor.R;
 import com.wubeibei.rightdoor.util.LogUtil;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
 
 public class PathFragment extends Fragment {
     private static final String TAG = "PathFragment";
     private TextView textView;
-    private LinearLayout linearLayout;
-    private FrameLayout textFrame;
+    private TextView pathText;
+    private LinearLayout textFrame;
     private FrameLayout pathFrame;
     private ArrayList<TextView> textViews = new ArrayList<>(3);
     private View main;
@@ -58,7 +54,7 @@ public class PathFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         main = inflater.inflate(R.layout.fragment_path, container, false);
         textFrame = main.findViewById(R.id.textFrame);
-        linearLayout = main.findViewById(R.id.path_text);
+        pathText = main.findViewById(R.id.path_text);
         pathFrame = main.findViewById(R.id.path_framelayout);
         textViews.add((TextView) main.findViewById(R.id.text1));
         textViews.add((TextView) main.findViewById(R.id.text2));
@@ -99,7 +95,7 @@ public class PathFragment extends Fragment {
             animatorSet = new AnimatorSet();
             ObjectAnimator TextalphaAnimatorIn = ObjectAnimator.ofFloat(textFrame, "alpha", 0.0f, 1f);
             TextalphaAnimatorIn.setDuration(1);
-            ObjectAnimator textViewAlpha = ObjectAnimator.ofFloat(linearLayout, "alpha", 0.0f, 1f);
+            ObjectAnimator textViewAlpha = ObjectAnimator.ofFloat(pathText, "alpha", 0.0f, 1f);
             textViewAlpha.setDuration(2000);
             ObjectAnimator TextalphaAnimatorOut = ObjectAnimator.ofFloat(textFrame, "alpha", 1f, 0.0f);
             TextalphaAnimatorIn.setDuration(500);
