@@ -34,6 +34,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import static com.wubeibei.rightdoor.res.RightDoorCommand.Auto;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private int CurrentDrivingRoadIDNum = 0; //当前行驶路线
@@ -154,6 +156,16 @@ public class MainActivity extends AppCompatActivity {
                                     replaceFragment(pathFragment);
                                     break;
                                 default:
+                                    break;
+                            }
+                        }
+                        break;
+                        // 切换驾驶模式
+                        case RightDoorCommand.SystemStatus:{
+                            data = jsonObject.getIntValue("data");
+                            switch (data){
+                                case RightDoorCommand.Remote:
+                                    replaceFragment(motionlessFragment);
                                     break;
                             }
                         }
