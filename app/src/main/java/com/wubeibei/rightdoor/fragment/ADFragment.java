@@ -47,13 +47,13 @@ public class ADFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             ImageView imageView = main.findViewById(R.id.ad_imge);
-            Glide.with(ADFragment.this).load(getArguments().getInt("picRes")).into(imageView);
+            Glide.with(this).load(getArguments().getInt("picRes")).into(imageView);
         }
         return main;
     }
 
     public void setImge(final int res) {
         ImageView imageView = main.findViewById(R.id.ad_imge);
-        Glide.with(ADFragment.this).load(res).into(imageView);
+        Glide.with(this).load(res).into(imageView);
     }
 }

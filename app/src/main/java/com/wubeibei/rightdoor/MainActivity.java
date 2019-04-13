@@ -46,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private PathFragment pathFragment;
     private ADFragment adFragment;
     private StationFragment stationFragment;
-    MotionlessFragment motionlessFragment;
+    private MotionlessFragment motionlessFragment;
     private final int receivePORT = 5556;  // 接收port号
+    private boolean isAuto = false;
 
 
     @Override
@@ -163,8 +164,13 @@ public class MainActivity extends AppCompatActivity {
                         // 切换驾驶模式
                         case RightDoorCommand.SystemStatus:{
                             data = jsonObject.getIntValue("data");
-                            switch (data){
+                            switch (data) {
                                 case RightDoorCommand.Remote:
+                                    isAuto = false;
+                                    replaceFragment(motionlessFragment);
+                                    break;
+                                case RightDoorCommand.Auto:
+                                    isAuto = true;
                                     replaceFragment(motionlessFragment);
                                     break;
                             }
@@ -198,15 +204,16 @@ public class MainActivity extends AppCompatActivity {
                                 adFragment.setImge(R.drawable.opendoor_right);
                                 replaceFragment(adFragment);
                                 break;
-                            case RightDoorCommand.openedDoor:
-                                replaceFragment(stationFragment);
-                                break;
                             case RightDoorCommand.closingDoor:
                                 adFragment.setImge(R.drawable.closedoor_right);
                                 replaceFragment(adFragment);
                                 break;
+                            case RightDoorCommand.openedDoor:
                             case RightDoorCommand.closedDoor:
-                                replaceFragment(stationFragment);
+                                if(isAuto)
+                                    replaceFragment(stationFragment);
+                                else
+                                    replaceFragment(motionlessFragment);
                                 break;
                             default:
                                 break;
